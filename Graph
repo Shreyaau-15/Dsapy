@@ -1,0 +1,68 @@
+class Graph:
+    def __init__(self):
+       self.graph = defaultdict(list)
+    def add_edge(self, u, v):
+        self.graph[u].append(v)
+        self.graph[v].append(u)  # For undirected graph, add both directions
+    
+    
+    def bfs(self, start):
+        visited = set()  
+        queue = deque([start])  
+        bfs_order = []  
+
+        while queue:
+            node = queue.popleft()  
+
+            if node not in visited:
+                visited.add(node)
+                bfs_order.append(node)
+
+                
+                for neighbor in self.graph[node]:
+                    if neighbor not in visited:
+                        queue.append(neighbor)
+        
+        return bfs_order
+
+    
+    def dfs(self, start):
+        visited = set()  # To keep track of visited nodes
+        dfs_order = []  # To store the order of DFS traversal
+
+        def dfs_recursive(node):
+            if node not in visited:
+                visited.add(node)
+                dfs_order.append(node)
+
+                # Visit all unvisited neighbors
+                for neighbor in self.graph[node]:
+                    if neighbor not in visited:
+                        dfs_recursive(neighbor)
+
+        dfs_recursive(start)
+        return dfs_order
+
+
+if __name__ == "__main__":
+    # Create a graph object
+    g = Graph()
+
+  
+    g.add_edge(0, 1)
+    g.add_edge(0, 2)
+    g.add_edge(1, 2)
+    g.add_edge(2, 3)
+    g.add_edge(3, 4)
+
+    print("Adjacency List:")
+    for node, neighbors in g.graph.items():
+        print(f"{node}: {neighbors}")
+
+    
+    print("\nBFS Traversal starting from node 0:")
+    print(g.bfs(0))
+
+    
+    print("\nDFS Traversal starting from node 0:")
+    print(g.dfs(0))
